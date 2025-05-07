@@ -61,7 +61,7 @@ class PythonInstallCard(WithExistedInstallCard):
             msg = gt('文件不存在', 'ui') + ' ' + python_path
         elif not self.ctx.python_service.is_virtual_python():
             icon = FluentIcon.INFO.icon(color=FluentThemeColor.RED.value)
-            msg = gt('非虚拟环境', 'ui') + ' ' + python_path
+            msg = gt('非虚拟环境，请选择位于venv路径下的虚拟环境', 'ui') + ' ' + python_path
         else:
             python_version = self.ctx.python_service.get_python_version()
             if python_version is None:

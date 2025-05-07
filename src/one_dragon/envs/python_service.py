@@ -215,10 +215,10 @@ class PythonService:
             shutil.rmtree(DEFAULT_VENV_DIR_PATH)
 
         if not self.install_default_python(progress_callback):
-            return False, '安装Python失败 请尝试到「脚本环境」更改网络代理'
+            return False, '安装Python失败 请尝试到「设置」更改下载源或设置网络代理'
         self.env_config.python_path = DEFAULT_PYTHON_PATH
         if not self.install_default_pip(progress_callback):
-            return False, '安装pip失败 请尝试到「脚本环境」更改网络代理'
+            return False, '安装pip失败 请尝试到「设置」更改下载源或设置网络代理'
         if not self.install_default_virtualenv(progress_callback):
             return False, '安装virtualenv失败'
         if not self.create_default_venv(progress_callback):
@@ -301,7 +301,7 @@ class PythonService:
                     # ping命令成功执行但输出格式非预期（极少见），
                     # 此时使用命令执行的总时长作为延迟
                     ms = int(elapsed_time_sec * 1000)
-                    log.warning(f"Ping to {domain} succeeded but output format unexpected, using elapsed time: {ms}ms. Output: {result.strip()}")
+                    log.warning(f"{domain}测速结果异常 执行用时: {ms}ms. 原输出: {result.strip()}")
 
             except Exception as e:
                 # 捕获ping命令执行失败或超时抛出的异常
@@ -311,7 +311,7 @@ class PythonService:
                 # 将耗时设置为命令执行的总时长（通常接近或大于超时时间 1000ms）
                 # 作为该源的“延迟”值，以便在排序时体现超时
                 ms = int(elapsed_time_sec * 1000)
-                log.warning(f"Ping to {domain} failed or timed out, using elapsed time: {ms}ms. Error: {e}")
+                log.warning(f"{domain} 测速失败或超时： {ms}ms. Error: {e}")
 
             # 将结果添加到列表中，无论成功还是失败
             # ms 在失败时被设置为较大的值（耗时），排序时会排在后面
@@ -327,9 +327,9 @@ class PythonService:
 
         # 检查列表是否为空，防止所有ping都失败导致错误
         if not ping_result_list:
-             log.error("No ping results collected.")
+             log.error("无有效ping结果，所有源测速失败。")
              if progress_callback is not None:
-                 progress_callback(-1, "PIP源测速失败：未能收集任何结果。")
+                 progress_callback(-1, "pip源测速失败：未能收集任何有效结果，请尝试在设置里手动选择pip源。")
              # 您可以在这里选择一个默认源或者抛出异常，取决于您的需求
              return
 
@@ -339,7 +339,7 @@ class PythonService:
 
         # 可选：如果最优源的耗时都大于等于超时时间 (1000ms)，可能意味着所有源都不可达
         if best_ms >= 1000:
-             log.warning(f"The best source '{best_source.label}' reported a latency of {best_ms}ms, which is >= the timeout. All tested sources might be unreachable or very slow.")
+             log.warning(f"当前最佳源：{best_source.label} 延迟为{best_ms}ms,存在超时风险。可能所有源都不可达或网络异常。")
              # 根据需要，可以在这里添加处理逻辑，比如使用备用策略
         display_log = f'选择最优pip源 {best_source.label}'
         log.info(display_log)

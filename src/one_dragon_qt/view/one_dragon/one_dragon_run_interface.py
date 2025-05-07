@@ -100,7 +100,7 @@ class OneDragonRunInterface(VerticalScrollInterface):
 
         if self.help_url is not None:
             self.help_opt = HyperlinkCard(icon=FluentIcon.HELP, title='使用说明', text='前往', url=self.help_url)
-            self.help_opt.setContent('先看说明 再使用与提问')
+            self.help_opt.setContent('先看说明 再使用与提问\n战斗问题反馈请使用战斗助手页面，不要提交本页面截图')
             run_group.addSettingCard(self.help_opt)
 
         self.notify_switch = SwitchSettingCard(icon=FluentIcon.INFO, title='单应用通知')
