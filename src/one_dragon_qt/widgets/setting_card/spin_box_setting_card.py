@@ -81,7 +81,7 @@ class SpinBoxSettingCard(SpinBoxSettingCardBase):
                  icon: Union[str, QIcon, FluentIconBase], title: str, content: Optional[str] = None,
                  step: int = 1,
                  minimum: int = 0,
-                 maximum: int = 99,
+                 maximum: int = 999,
                  min_width: int = 140,
                  max_width: int = 300,
                  **kwargs):
